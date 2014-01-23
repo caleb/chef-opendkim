@@ -7,9 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 
-node[:opendkim][:packages].each do |package|
-  package package
-end
+include_recipe 'openssl::default'
+
+include_recipe "opendkim::install_#{node[:opendkim][:install_method]}"
 
 # create the config directory
 directory node[:opendkim][:config_dir] do

@@ -1,19 +1,23 @@
 default[:opendkim][:install_method] = case node[:platform_family]
                                       when 'debian'
                                         'package'
-                                      when 'rhel', 'fedora'
+                                      when 'rhel'
                                         'source'
+                                      when 'fedora'
+                                        'package'
                                       when 'freebsd'
                                         'package'
                                       end
 
 default[:opendkim][:packages] = case node[:platform_family]
                                 when 'debian'
-                                  ['opendkim', 'opendkim-tools']
-                                when 'rhel', 'fedora'
+                                  [ 'opendkim', 'opendkim-tools' ]
+                                when 'rhel',
                                   []
+                                when 'fedora'
+                                  [ 'opendkim', 'bind-utils' ]
                                 when 'freebsd'
-                                  ['opendkim']
+                                  [ 'opendkim' ]
                                 end
 
 default[:opendkim][:source][:version] = '2.6.8'
@@ -24,7 +28,9 @@ default[:opendkim][:source][:checksum] = 'e3b0c44298fc1c149afbf4c8996fb92427ae41
 config_dir = case node[:platform_family]
 when 'debian'
   '/etc/opendkim'
-when 'rhel', 'fedora'
+when 'rhel'
+  '/etc/opendkim'
+when 'fedora'
   '/etc/opendkim'
 when 'freebsd'
   '/usr/local/etc/opendkim'
@@ -33,7 +39,9 @@ end
 default[:opendkim][:config_file] = case node[:platform_family]
                                    when 'debian'
                                      '/etc/opendkim.conf'
-                                   when 'rhel', 'fedora'
+                                   when 'rhel'
+                                     '/etc/opendkim.conf'
+                                   when 'fedora'
                                      '/etc/opendkim.conf'
                                    when 'freebsd'
                                      '/usr/local/etc/opendkim.conf'
@@ -43,7 +51,10 @@ case node[:platform_family]
 when 'debian'
   default[:opendkim][:user] = 'opendkim'
   default[:opendkim][:group] = 'opendkim'
-when 'rhel', 'fedora'
+when 'rhel'
+  default[:opendkim][:user] = 'opendkim'
+  default[:opendkim][:group] = 'opendkim'
+when 'fedora'
   default[:opendkim][:user] = 'opendkim'
   default[:opendkim][:group] = 'opendkim'
 when 'freebsd'
@@ -53,13 +64,15 @@ end
 
 default[:opendkim][:config_dir] = config_dir
 default[:opendkim][:key_dir] = ::File.join config_dir, 'keys'
-default[:opendkim][:key_table] = ::File.join config_dir, 'keytable'
-default[:opendkim][:signing_table] = ::File.join config_dir, 'signingtable'
-default[:opendkim][:signing_table_dir] = ::File.join config_dir, 'signingtable.d'
-default[:opendkim][:key_table_dir] = ::File.join config_dir, 'keytable.d'
+default[:opendkim][:key_table] = ::File.join config_dir, 'KeyTable'
+default[:opendkim][:signing_table] = ::File.join config_dir, 'SigningTable'
+default[:opendkim][:trusted_hosts_file] = ::File.join config_dir, 'TrustedHosts'
+default[:opendkim][:signing_table_dir] = ::File.join config_dir, 'SigningTable.d'
+default[:opendkim][:key_table_dir] = ::File.join config_dir, 'KeyTable.d'
 default[:opendkim][:wildcard_signing_table] = false
 default[:opendkim][:service_name] = 'opendkim'
 default[:opendkim][:socket] = 'local:/var/run/opendkim/opendkim.sock'
+default[:opendkim][:trusted_hosts] = [ '127.0.0.1' ]
 
 default[:opendkim][:config] = {}
 

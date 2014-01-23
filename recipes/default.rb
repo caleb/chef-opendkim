@@ -83,6 +83,16 @@ file node[:opendkim][:key_table] do
   not_if { ::File.exist? node[:opendkim][:key_table] }
 end
 
+# Fill the TrustedHosts file
+template node[:opendkim][:trusted_hosts_file] do
+  user node[:opendkim][:user]
+  group node[:opendkim][:group]
+  source 'trusted_hosts.erb'
+  mode '0600'
+  action :create
+  variables :hosts => node[:opendkim][:trusted_hosts]
+end
+
 # create the config file
 
 camelize = lambda do |key|
@@ -109,6 +119,8 @@ config['SigningTable'] = if node[:opendkim][:wildcard_signing_table]
                          else
                            "file:#{node[:opendkim][:signing_table]}"
                          end
+config['InternalHosts'] = "refile:#{node[:opendkim][:trusted_hosts_file]}"
+config['ExternalIgnoreList'] = "refile:#{node[:opendkim][:trusted_hosts_file]}"
 config['Socket'] = node[:opendkim][:socket]
 config['UserID'] = "#{ node[:opendkim][:user] }:#{ node[:opendkim][:group] }"
 

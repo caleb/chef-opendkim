@@ -11,7 +11,7 @@ default[:opendkim][:packages] = case node[:platform_family]
                                 when 'debian'
                                   ['opendkim', 'opendkim-tools']
                                 when 'rhel', 'fedora'
-                                  ['opendkim']
+                                  []
                                 when 'freebsd'
                                   ['opendkim']
                                 end

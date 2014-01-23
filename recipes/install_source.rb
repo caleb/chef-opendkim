@@ -11,7 +11,7 @@ end
 version = node['opendkim']['version'] || '2.6.8'
 url = "http://downloads.sourceforge.net/project/opendkim/opendkim-#{version}.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fopendkim%2Ffiles%2F&ts=1390452355&use_mirror=softlayer-ams"
 checksum  = nil
-configure_options = '--sysconfdir=/etc --prefix=/usr/local --localstatedir=/var'
+configure_options = '--enable-oversign --sysconfdir=/etc --prefix=/usr/local --localstatedir=/var'
 
 remote_file "#{Chef::Config[:file_cache_path]}/opendkim-#{version}.tar.gz" do
   source "#{url}/opendkim-#{version}.tar.gz"

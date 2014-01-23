@@ -52,13 +52,16 @@ directory node[:opendkim][:signing_table_dir] do
 end
 
 # create the socket directory if it doesn't exist
-directory ::File.dirname(node[:opendkim][:socket]) do
-  user node[:opendkim][:user]
-  group node[:opendkim][:user]
-  mode '0755'
-  recursive true
+if node[:opendkim][:socket].start_with? 'local:'
+  socket_dir = ::File.dirname node[:opendkim][:socket].gsub(/^local:/, '')
+  directory socket_dir do
+    user node[:opendkim][:user]
+    group node[:opendkim][:group]
+    mode '0755'
+    recursive true
 
-  action :create
+    action :create
+  end
 end
 
 # create the config file
@@ -88,6 +91,7 @@ config['SigningTable'] = if node[:opendkim][:wildcard_signing_table]
                            "file:#{node[:opendkim][:signing_table]}"
                          end
 config['Socket'] = node[:opendkim][:socket]
+config['UserID'] = "#{ node[:opendkim][:user] }:#{ node[:opendkim][:group] }"
 
 template node[:opendkim][:config_file] do
   source 'opendkim.conf.erb'
@@ -96,9 +100,11 @@ template node[:opendkim][:config_file] do
   mode '644'
 
   variables settings: config
+
+  notifies :restart, "service[#{node[:opendkim][:service_name]}]"
 end
 
 service node[:opendkim][:service_name] do
   supports restart: true, reload: true, status: true
-  action :enable
+  action [ :enable, :start ]
 end

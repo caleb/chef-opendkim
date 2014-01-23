@@ -16,6 +16,11 @@ default[:opendkim][:packages] = case node[:platform_family]
                                   ['opendkim']
                                 end
 
+default[:opendkim][:source][:version] = '2.6.8'
+default[:opendkim][:source][:url] = "http://downloads.sourceforge.net/project/opendkim/opendkim-#{default[:opendkim][:source][:version]}.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fopendkim%2Ffiles%2F&ts=1390452355&use_mirror=softlayer-ams"
+default[:opendkim][:source][:configure_options] = '--enable-oversign --sysconfdir=/etc --prefix=/usr/local --localstatedir=/var'
+default[:opendkim][:source][:checksum] = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+
 config_dir = case node[:platform_family]
 when 'debian'
   '/etc/opendkim'

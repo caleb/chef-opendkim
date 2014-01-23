@@ -64,6 +64,25 @@ if node[:opendkim][:socket].start_with? 'local:'
   end
 end
 
+# touch an empty signing table and key table to make the configuration happy
+file node[:opendkim][:signing_table] do
+  user node[:opendkim][:user]
+  group node[:opendkim][:group]
+  mode '0600'
+  content ''
+  action :create
+  not_if { ::File.exist? node[:opendkim][:signing_table] }
+end
+
+file node[:opendkim][:key_table] do
+  user node[:opendkim][:user]
+  group node[:opendkim][:group]
+  mode '0600'
+  content ''
+  action :create
+  not_if { ::File.exist? node[:opendkim][:key_table] }
+end
+
 # create the config file
 
 camelize = lambda do |key|

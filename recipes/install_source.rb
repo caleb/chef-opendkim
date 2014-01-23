@@ -8,14 +8,14 @@ when 'rhel', 'fedora'
 when 'freebsd'
 end
 
-version = node['opendkim']['version'] || '2.6.8'
-url = "http://downloads.sourceforge.net/project/opendkim/opendkim-#{version}.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fopendkim%2Ffiles%2F&ts=1390452355&use_mirror=softlayer-ams"
-checksum  = nil
-configure_options = '--enable-oversign --sysconfdir=/etc --prefix=/usr/local --localstatedir=/var'
+version = node[:opendkim][:source][:version]
+url = node[:opendkim][:source][:url]
+checksum  = node[:opendkim][:source][:checksum]
+configure_options = node[:opendkim][:source][:configure_options]
 
 remote_file "#{Chef::Config[:file_cache_path]}/opendkim-#{version}.tar.gz" do
   source "#{url}/opendkim-#{version}.tar.gz"
-  checksum checksum if checksum
+  checksum checksum
   mode '0644'
   not_if 'which opendkim'
 end

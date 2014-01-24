@@ -12,10 +12,10 @@ action :create do
 
   private_key = new_resource.private_key
 
-  private_key_file = "#{node[:opendkim][:key_dir]}/#{selector}._domainkey.#{domain}.private"
-  public_key_file = "#{node[:opendkim][:key_dir]}/#{selector}._domainkey.#{domain}.txt"
+  private_key_file = "#{node[:opendkim][:key_dir]}/#{selector}_#{domain}.private"
+  public_key_file = "#{node[:opendkim][:key_dir]}/#{selector}_#{domain}.txt"
 
-  # generate a new key if one isn't provided and an existing key isn't found
+  # if a private key is provided, use it
   if private_key
     file private_key_file do
       user node[:opendkim][:user]

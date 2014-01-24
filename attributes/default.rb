@@ -44,7 +44,7 @@ default[:opendkim][:config_file] = case node[:platform_family]
                                    when 'fedora'
                                      '/etc/opendkim.conf'
                                    when 'freebsd'
-                                     '/usr/local/etc/opendkim.conf'
+                                     '/usr/local/etc/mail/opendkim.conf'
                                    end
 
 case node[:platform_family]
@@ -58,8 +58,8 @@ when 'fedora'
   default[:opendkim][:user] = 'opendkim'
   default[:opendkim][:group] = 'opendkim'
 when 'freebsd'
-  default[:opendkim][:user] = 'opendkim'
-  default[:opendkim][:group] = 'opendkim'
+  default[:opendkim][:user] = 'mailnull'
+  default[:opendkim][:group] = 'mailnull'
 end
 
 default[:opendkim][:config_dir] = config_dir
@@ -70,7 +70,9 @@ default[:opendkim][:trusted_hosts_file] = ::File.join config_dir, 'TrustedHosts'
 default[:opendkim][:signing_table_dir] = ::File.join config_dir, 'SigningTable.d'
 default[:opendkim][:key_table_dir] = ::File.join config_dir, 'KeyTable.d'
 default[:opendkim][:wildcard_signing_table] = false
-default[:opendkim][:service_name] = 'opendkim'
+default[:opendkim][:service_name] = value_for_platform_family ['debian', 'rhel', 'centos'] => 'opendkim',
+                                                              'freebsd' => 'milter-opendkim'
+
 default[:opendkim][:socket] = 'local:/var/run/opendkim/opendkim.sock'
 default[:opendkim][:trusted_hosts] = [ '127.0.0.1' ]
 

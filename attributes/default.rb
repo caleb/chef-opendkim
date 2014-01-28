@@ -70,7 +70,7 @@ default[:opendkim][:trusted_hosts_file] = ::File.join config_dir, 'TrustedHosts'
 default[:opendkim][:signing_table_dir] = ::File.join config_dir, 'SigningTable.d'
 default[:opendkim][:key_table_dir] = ::File.join config_dir, 'KeyTable.d'
 default[:opendkim][:wildcard_signing_table] = false
-default[:opendkim][:service_name] = value_for_platform_family ['debian', 'rhel', 'centos'] => 'opendkim',
+default[:opendkim][:service_name] = value_for_platform_family ['debian', 'rhel', 'fedora'] => 'opendkim',
                                                               'freebsd' => 'milter-opendkim'
 
 default[:opendkim][:socket] = 'local:/var/run/opendkim/opendkim.sock'

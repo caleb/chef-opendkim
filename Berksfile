@@ -3,5 +3,5 @@ site :opscode
 metadata
 
 group :test do
-  cookbook 'fake', :path => 'test/cookbooks/fake'
+  cookbook 'fake', :path => 'test/fixtures/cookbooks/fake'
 end

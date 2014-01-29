@@ -29,7 +29,6 @@ action :create do
     # generate a new key
     script 'create dkim private key' do
       interpreter 'sh'
-      user node[:opendkim][:user]
       cwd Chef::Config[:file_cache_path]
       code <<-EOB
         opendkim-genkey -a -b #{bits} -s "#{selector}" -d "#{domain}"
@@ -41,7 +40,6 @@ action :create do
     # move the key files into their proper place
     script 'move key files' do
       interpreter 'sh'
-      user node[:opendkim][:user]
       cwd Chef::Config[:file_cache_path]
       code <<-EOB
         mv #{selector}.private #{private_key_file}
@@ -50,6 +48,18 @@ action :create do
 
       notifies :create, "ruby_block[save generated public key for #{name}]"
       action :run
+    end
+
+    # change the owner and group of the key files
+    file private_key_file do
+      user node[:opendkim][:user]
+      group node[:opendkim][:group]
+      mode '0600'
+    end
+    file private_key_file do
+      user node[:opendkim][:user]
+      group node[:opendkim][:group]
+      mode '0644'
     end
   end
 

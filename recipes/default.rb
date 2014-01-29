@@ -135,6 +135,23 @@ template node[:opendkim][:config_file] do
   notifies :restart, "service[#{node[:opendkim][:service_name]}]"
 end
 
+# concatenate the key table entries
+script 'concatenate key and signing table entries' do
+  interpreter 'sh'
+  user node[:opendkim][:user]
+  cwd node[:opendkim][:key_table_dir]
+  code <<-EOB
+    cd #{node[:opendkim][:key_table_dir]}
+    cat * > #{node[:opendkim][:key_table]}
+
+    cd #{node[:opendkim][:signing_table_dir]}
+    cat * > #{node[:opendkim][:signing_table]}
+  EOB
+
+  notifies :restart, "service[#{node[:opendkim][:service_name]}]"
+  action :nothing
+end
+
 service node[:opendkim][:service_name] do
   supports restart: true, reload: true, status: true
   action [ :enable, :start ]

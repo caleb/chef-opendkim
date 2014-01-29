@@ -27,7 +27,7 @@ action :create do
     end
   elsif ! ::File.exist?(private_key_file)
     # generate a new key
-    script 'create dkim private key' do
+    script "create dkim private key for #{name}" do
       interpreter 'sh'
       cwd Chef::Config[:file_cache_path]
       code <<-EOB
@@ -38,7 +38,7 @@ action :create do
     end
 
     # move the key files into their proper place
-    script 'move key files' do
+    script "move key files for #{name}" do
       interpreter 'sh'
       cwd Chef::Config[:file_cache_path]
       code <<-EOB
@@ -135,23 +135,6 @@ action :create do
 
     notifies :run, 'script[concatenate key and signing table entries]'
     action :create
-  end
-
-  # concatenate the key table entries
-  script 'concatenate key and signing table entries' do
-    interpreter 'sh'
-    user node[:opendkim][:user]
-    cwd node[:opendkim][:key_table_dir]
-    code <<-EOB
-      cd #{node[:opendkim][:key_table_dir]}
-      cat * > #{node[:opendkim][:key_table]}
-
-      cd #{node[:opendkim][:signing_table_dir]}
-      cat * > #{node[:opendkim][:signing_table]}
-    EOB
-
-    notifies :restart, "service[#{node[:opendkim][:service_name]}]", :immediate
-    action :nothing
   end
 end
 

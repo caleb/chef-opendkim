@@ -118,7 +118,7 @@ action :create do
               :selector => selector,
               :key_file => private_key_file
 
-    notifies :run, 'script[concatenate key table entries]'
+    notifies :run, 'script[concatenate key and signing table entries]'
     action :create
   end
 
@@ -133,33 +133,24 @@ action :create do
     variables :name => name,
               :signatures => signatures
 
-    notifies :run, 'script[concatenate signing table entries]'
+    notifies :run, 'script[concatenate key and signing table entries]'
     action :create
   end
 
   # concatenate the key table entries
-  script 'concatenate key table entries' do
+  script 'concatenate key and signing table entries' do
     interpreter 'sh'
     user node[:opendkim][:user]
     cwd node[:opendkim][:key_table_dir]
     code <<-EOB
+      cd #{node[:opendkim][:key_table_dir]}
       cat * > #{node[:opendkim][:key_table]}
-    EOB
 
-    notifies :restart, "service[#{node[:opendkim][:service_name]}]"
-    action :nothing
-  end
-
-  # concatenate the signing table entries
-  script 'concatenate signing table entries' do
-    interpreter 'sh'
-    user node[:opendkim][:user]
-    cwd node[:opendkim][:signing_table_dir]
-    code <<-EOB
+      cd #{node[:opendkim][:signing_table_dir]}
       cat * > #{node[:opendkim][:signing_table]}
     EOB
 
-    notifies :restart, "service[#{node[:opendkim][:service_name]}]"
+    notifies :restart, "service[#{node[:opendkim][:service_name]}]", :immediate
     action :nothing
   end
 end

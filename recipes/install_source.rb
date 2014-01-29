@@ -20,7 +20,8 @@ remote_file "#{Chef::Config[:file_cache_path]}/opendkim-#{version}.tar.gz" do
   not_if 'which opendkim'
 end
 
-bash 'build opendkim' do
+script 'build opendkim' do
+  interpreter 'sh'
   cwd Chef::Config[:file_cache_path]
   code <<-EOF
     tar -zxvf opendkim-#{version}.tar.gz
@@ -42,7 +43,8 @@ user node[:opendkim][:user] do
   action :create
 end
 
-bash 'copy init.d script' do
+script 'copy init.d script' do
+  interpreter 'sh'
   cwd ::File.join(Chef::Config[:file_cache_path], "opendkim-#{version}")
   code <<-EOB
     cp contrib/init/redhat/opendkim /etc/init.d/#{node[:opendkim][:service_name]}

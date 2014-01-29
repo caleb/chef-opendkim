@@ -8,3 +8,6 @@ version          '0.1.0'
 
 depends 'openssl'
 depends 'build-essential'
+depends 'freebsd'
+depends 'apt'
+depends 'yum'

@@ -10,6 +10,9 @@ platforms:
   - name: centos-6.4
   - name: fedora-20
   - name: freebsd-9.2
+    run_list:
+      - recipe[freebsd::portsnap]
+      - recipe[fake::freebsd]
 
 suites:
   - name: default

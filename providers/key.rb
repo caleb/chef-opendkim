@@ -27,7 +27,8 @@ action :create do
     end
   elsif ! ::File.exist?(private_key_file)
     # generate a new key
-    bash 'create dkim private key' do
+    script 'create dkim private key' do
+      interpreter 'sh'
       cwd Chef::Config[:file_cache_path]
       code <<-EOB
         opendkim-genkey -a -b #{bits} -s "#{selector}" -d "#{domain}"
@@ -37,7 +38,8 @@ action :create do
     end
 
     # move the key files into their proper place
-    bash 'move key files' do
+    script 'move key files' do
+      interpreter 'sh'
       cwd Chef::Config[:file_cache_path]
       code <<-EOB
         mv #{selector}.private #{private_key_file}
@@ -103,7 +105,7 @@ action :create do
               :selector => selector,
               :key_file => private_key_file
 
-    notifies :run, 'bash[concatenate key table entries]'
+    notifies :run, 'script[concatenate key table entries]'
     action :create
   end
 
@@ -118,12 +120,13 @@ action :create do
     variables :name => name,
               :signatures => signatures
 
-    notifies :run, 'bash[concatenate signing table entries]'
+    notifies :run, 'script[concatenate signing table entries]'
     action :create
   end
 
   # concatenate the key table entries
-  bash 'concatenate key table entries' do
+  script 'concatenate key table entries' do
+    interpreter 'sh'
     user node[:opendkim][:user]
     cwd node[:opendkim][:key_table_dir]
     code <<-EOB
@@ -135,7 +138,8 @@ action :create do
   end
 
   # concatenate the signing table entries
-  bash 'concatenate signing table entries' do
+  script 'concatenate signing table entries' do
+    interpreter 'sh'
     user node[:opendkim][:user]
     cwd node[:opendkim][:signing_table_dir]
     code <<-EOB

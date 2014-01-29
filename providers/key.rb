@@ -56,6 +56,7 @@ action :create do
       group node[:opendkim][:group]
       mode '0600'
     end
+
     file public_key_file do
       user node[:opendkim][:user]
       group node[:opendkim][:group]

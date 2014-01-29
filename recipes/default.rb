@@ -148,7 +148,7 @@ script 'concatenate key and signing table entries' do
     cat * > #{node[:opendkim][:signing_table]}
   EOB
 
-  notifies :restart, "service[#{node[:opendkim][:service_name]}]"
+  notifies :restart, "service[#{node[:opendkim][:service_name]}]", :immediately
   action :nothing
 end
 

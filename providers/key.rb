@@ -29,6 +29,7 @@ action :create do
     # generate a new key
     script 'create dkim private key' do
       interpreter 'sh'
+      user node[:opendkim][:user]
       cwd Chef::Config[:file_cache_path]
       code <<-EOB
         opendkim-genkey -a -b #{bits} -s "#{selector}" -d "#{domain}"
@@ -40,6 +41,7 @@ action :create do
     # move the key files into their proper place
     script 'move key files' do
       interpreter 'sh'
+      user node[:opendkim][:user]
       cwd Chef::Config[:file_cache_path]
       code <<-EOB
         mv #{selector}.private #{private_key_file}

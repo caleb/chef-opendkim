@@ -100,8 +100,18 @@ action :create do
     not_if { Chef::Config[:solo] || ! ::File.exist?(public_key_file) }
 
     block do
-      node[:opendkim][:generated_public_keys] ||= {}
-      node[:opendkim][:generated_public_keys][name] = File.read public_key_file
+      key = {}
+      key[:public_key] = File.read public_key_file
+      key[:private_key] = File.read private_key_file
+      key[:selector] = selector
+      key[:domain] = domain
+      key[:signatures] = signatures
+      key[:bits] = bits
+
+      node.normal[:opendkim][:keys] ||= {}
+      node.normal[:opendkim][:keys][name] = key
+
+      node.save
     end
   end
 

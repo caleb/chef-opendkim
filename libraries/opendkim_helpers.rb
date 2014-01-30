@@ -1,6 +1,6 @@
 class Chef
-  class Mixin
-    class OpenDKIMHelpers
+  module Mixin
+    module OpenDKIMHelpers
       def opendkim_postfix_milter_address
         if node.attribute?('opendkim') && node['opendkim'].attribute?('socket')
           opendkim_socket = node['opendkim']['socket']

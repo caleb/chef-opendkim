@@ -101,8 +101,8 @@ action :create do
 
     block do
       key = {}
-      key[:public_key] = File.read public_key_file
-      key[:private_key] = File.read private_key_file
+      key[:public_key] = ::File.read public_key_file
+      key[:private_key] = ::File.read private_key_file
       key[:selector] = selector
       key[:domain] = domain
       key[:signatures] = signatures

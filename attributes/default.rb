@@ -13,7 +13,7 @@ default[:opendkim][:packages] = case node[:platform_family]
                                 when 'debian'
                                   if node[:platform] != 'ubuntu' || (node[:platform] == 'ubuntu' && node[:platform_version].to_f >= 12.04)
                                     [ 'opendkim', 'opendkim-tools' ]
-                                  elsif
+                                  else
                                     [ 'opendkim' ]
                                   end
                                 when 'rhel'

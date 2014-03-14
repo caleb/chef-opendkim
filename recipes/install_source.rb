@@ -2,6 +2,7 @@ include_recipe 'build-essential::default'
 
 case node[:platform_family]
 when 'debian'
+  package 'libmilter-dev'
 when 'rhel', 'fedora'
   package 'openssl-devel'
   package 'sendmail-devel'
@@ -52,4 +53,3 @@ script 'copy init.d script' do
   EOB
   action :run
 end
-

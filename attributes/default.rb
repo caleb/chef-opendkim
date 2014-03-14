@@ -11,6 +11,7 @@ default[:opendkim][:install_method] = case node[:platform_family]
 
 default[:opendkim][:packages] = case node[:platform_family]
                                 when 'debian'
+                                  # Ubuntu < 12.04 does not have opendkim-tools
                                   if node[:platform] != 'ubuntu' || (node[:platform] == 'ubuntu' && node[:platform_version].to_f >= 12.04)
                                     [ 'opendkim', 'opendkim-tools' ]
                                   else

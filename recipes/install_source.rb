@@ -28,6 +28,7 @@ script 'build opendkim' do
     tar -zxvf opendkim-#{version}.tar.gz
     (cd opendkim-#{version} && ./configure #{configure_options})
     (cd opendkim-#{version} && make && make install)
+    ldconfig
   EOF
   not_if 'which opendkim'
 end

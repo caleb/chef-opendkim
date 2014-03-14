@@ -44,23 +44,25 @@ user node[:opendkim][:user] do
   action :create
 end
 
-script 'copy init.d script' do
-  interpreter 'sh'
-  cwd ::File.join(Chef::Config[:file_cache_path], "opendkim-#{version}")
+case node[:platform_family]
+when 'debian'
+  template "/etc/init.d/#{node[:opendkim][:service_name]}" do
+    source 'opendkim'
+    user 'root'
+    group 'root'
+    mode '755'
+  end
+when 'rhel', 'fedora'
+  script 'copy init.d script' do
+    interpreter 'sh'
+    cwd ::File.join(Chef::Config[:file_cache_path], "opendkim-#{version}")
 
-  case node[:platform_family]
-  when 'debian'
-    code <<-EOB
-      cp contrib/init/generic/opendkim /etc/init.d/#{node[:opendkim][:service_name]}
-      chmod 755 /etc/init.d/#{node[:opendkim][:service_name]}
-    EOB
-  when 'rhel', 'fedora'
     code <<-EOB
       cp contrib/init/redhat/opendkim /etc/init.d/#{node[:opendkim][:service_name]}
       chmod 755 /etc/init.d/#{node[:opendkim][:service_name]}
     EOB
-  when 'freebsd'
-  end
 
-  action :run
+    action :run
+  end
+when 'freebsd'
 end

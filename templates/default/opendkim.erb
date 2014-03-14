@@ -23,7 +23,7 @@
 # attempt to fall back to RedHatisms if LSB isn't available, or to
 # commonly-available utilities if it's not even RedHat.
 
-NAME=<%= #{node[:opendkim][:service_name]} %>
+NAME=<%= node[:opendkim][:service_name] %>
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 DAEMON=/usr/local/sbin/$NAME
 PIDFILE=/var/run/$NAME/$NAME.pid

@@ -47,7 +47,7 @@ end
 case node[:platform_family]
 when 'debian'
   template "/etc/init.d/#{node[:opendkim][:service_name]}" do
-    source 'opendkim'
+    source 'opendkim.erb'
     user 'root'
     group 'root'
     mode '755'

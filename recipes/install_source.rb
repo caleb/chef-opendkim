@@ -47,9 +47,20 @@ end
 script 'copy init.d script' do
   interpreter 'sh'
   cwd ::File.join(Chef::Config[:file_cache_path], "opendkim-#{version}")
-  code <<-EOB
-    cp contrib/init/redhat/opendkim /etc/init.d/#{node[:opendkim][:service_name]}
-    chmod 755 /etc/init.d/#{node[:opendkim][:service_name]}
-  EOB
+
+  case node[:platform_family]
+  when 'debian'
+    code <<-EOB
+      cp contrib/init/generic/opendkim /etc/init.d/#{node[:opendkim][:service_name]}
+      chmod 755 /etc/init.d/#{node[:opendkim][:service_name]}
+    EOB
+  when 'rhel', 'fedora'
+    code <<-EOB
+      cp contrib/init/redhat/opendkim /etc/init.d/#{node[:opendkim][:service_name]}
+      chmod 755 /etc/init.d/#{node[:opendkim][:service_name]}
+    EOB
+  when 'freebsd'
+  end
+
   action :run
 end

@@ -17,7 +17,7 @@ default[:opendkim][:packages] = case node[:platform_family]
                                   elsif
                                     [ 'opendkim' ]
                                   end
-                                when 'rhel',
+                                when 'rhel'
                                   []
                                 when 'fedora'
                                   [ 'opendkim', 'bind-utils' ]

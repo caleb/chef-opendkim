@@ -11,7 +11,12 @@ default[:opendkim][:install_method] = case node[:platform_family]
 
 default[:opendkim][:packages] = case node[:platform_family]
                                 when 'debian'
-                                  [ 'opendkim', 'opendkim-tools' ]
+                                  if node['platform'] != 'ubuntu' ||
+                                     (node['platform'] == 'ubuntu' && node['platform_version'].to_f >= 12.04)
+                                    [ 'opendkim', 'opendkim-tools' ]
+                                  elsif
+                                    [ 'opendkim' ]
+                                  end
                                 when 'rhel',
                                   []
                                 when 'fedora'
@@ -86,4 +91,3 @@ default[:opendkim][:config][:mode] = nil # sv
 default[:opendkim][:config][:sub_domains] = nil # no
 default[:opendkim][:config][:a_d_s_p_action] = nil # continue
 default[:opendkim][:config][:a_t_p_s_domains] = nil
-

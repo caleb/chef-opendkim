@@ -64,6 +64,16 @@ if node[:opendkim][:socket].start_with? 'local:'
   end
 end
 
+# just in case the run_dir isn't the same as the socket directory
+directory node[:opendkim][:run_dir] do
+  user node[:opendkim][:user]
+  group node[:opendkim][:group]
+  mode '0755'
+  recursive true
+
+  action :create
+end
+
 # touch an empty signing table and key table to make the configuration happy
 file node[:opendkim][:signing_table] do
   user node[:opendkim][:user]

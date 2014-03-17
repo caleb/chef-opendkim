@@ -78,7 +78,8 @@ default[:opendkim][:wildcard_signing_table] = false
 default[:opendkim][:service_name] = value_for_platform_family ['debian', 'rhel', 'fedora'] => 'opendkim',
                                                               'freebsd' => 'milter-opendkim'
 
-default[:opendkim][:socket] = 'local:/var/run/opendkim/opendkim.sock'
+default[:opendkim][:run_dir] = '/var/run/opendkim'
+default[:opendkim][:socket] = "local:#{default[:opendkim][:run_dir]}/opendkim.sock"
 default[:opendkim][:trusted_hosts] = [ '127.0.0.1' ]
 
 default[:opendkim][:config] = {}

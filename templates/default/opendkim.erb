@@ -26,11 +26,11 @@
 NAME=<%= node[:opendkim][:service_name] %>
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 DAEMON=/usr/local/sbin/$NAME
-PIDFILE=/var/run/$NAME/$NAME.pid
-CONFIG=/etc/$NAME.conf
+CONFIG="<%= default[:opendkim][:config_file] %>"
 USER=<%= node[:opendkim][:user] %>
 GROUP=<%= node[:opendkim][:group] %>
 RUNDIR="<%= node[:opendkim][:run_dir] %>"
+PIDFILE="$RUNDIR/$NAME.pid"
 
 # Implement our own status function per LSB specs. This will be used on
 # non-RedHat systems.
@@ -136,6 +136,8 @@ if [ ! -f "$CONFIG" ]; then
 fi
 
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+ARGS="$ARGS -P $PIDFILE"
 
 od_start() {
   echo -n "Starting OpenDKIM Milter: "

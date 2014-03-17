@@ -26,7 +26,7 @@
 NAME=<%= node[:opendkim][:service_name] %>
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 DAEMON=/usr/local/sbin/$NAME
-CONFIG="<%= default[:opendkim][:config_file] %>"
+CONFIG="<%= node[:opendkim][:config_file] %>"
 USER=<%= node[:opendkim][:user] %>
 GROUP=<%= node[:opendkim][:group] %>
 RUNDIR="<%= node[:opendkim][:run_dir] %>"

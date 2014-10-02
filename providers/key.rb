@@ -149,5 +149,13 @@ action :create do
 end
 
 action :delete do
+  file "#{node[:opendkim][:key_table_dir]}/#{new_resource.name}" do
+    notifies :run, 'script[concatenate key and signing table entries]'
+    action :delete
+  end
 
+  file "#{node[:opendkim][:signing_table_dir]}/#{new_resource.name}" do
+    notifies :run, 'script[concatenate key and signing table entries]'
+    action :delete
+  end
 end
